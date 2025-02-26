@@ -1,38 +1,84 @@
-# sv
+# Vehicle Advisor
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+A web application to help users make informed decisions when purchasing a used vehicle by providing comprehensive analysis of vehicle data, safety ratings, recalls, market pricing, and AI-powered negotiation strategies.
 
-## Creating a project
+## Features
 
-If you're seeing this, you've probably already done this step. Congrats!
+- **VIN Decoding**: Retrieve detailed vehicle information from the VIN
+- **Safety Analysis**: Check for recalls and view safety ratings
+- **Market Analysis**: Compare prices with similar vehicles in your area
+- **Claude AI-Powered Negotiation Strategies**: Get personalized negotiation advice
 
+## Getting Started
+
+### Prerequisites
+
+- Node.js 18+ and npm or pnpm
+- API keys for:
+    - MarketCheck API (for vehicle data)
+    - Claude API by Anthropic (for AI negotiation strategies)
+
+### Installation
+
+1. Clone the repository:
 ```bash
-# create a new project in the current directory
-npx sv create
-
-# create a new project in my-app
-npx sv create my-app
+git clone https://github.com/yourusername/vehicle-advisor.git
+cd vehicle-advisor
 ```
 
-## Developing
+2. Install dependencies:
+```bash
+npm install
+# or 
+pnpm install
+```
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+3. Create a `.env` file based on `.env.example` and add your API keys:
+```
+VITE_MARKETCHECK_API_KEY=your_key_here
+VITE_CLAUDE_API_KEY=your_key_here
+# Add other required environment variables
+```
 
+4. Start the development server:
 ```bash
 npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
+# or
+pnpm dev
 ```
 
-## Building
+## Using the Application
 
-To create a production version of your app:
+1. Enter the vehicle's VIN, your ZIP code, and the vehicle's mileage
+2. View the decoded vehicle information
+3. Check for recalls and safety ratings
+4. Analyze the market price compared to similar vehicles
+5. Get AI-generated negotiation strategies
 
-```bash
-npm run build
-```
+## Technologies
 
-You can preview the production build with `npm run preview`.
+- [SvelteKit](https://kit.svelte.dev/) - Web framework
+- [TailwindCSS](https://tailwindcss.com/) - CSS framework
+- [MarketCheck API](https://marketcheck.com/) - Vehicle data provider
+- [NHTSA API](https://api.nhtsa.gov/) - Safety ratings and recalls
+- [Claude API by Anthropic](https://anthropic.com/) - AI for negotiation strategies
 
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+## API Keys Setup
+
+### Claude API Key
+1. Sign up for an account at [Anthropic's Console](https://console.anthropic.com/)
+2. Generate an API key
+3. Add it to your `.env` file as `VITE_CLAUDE_API_KEY`
+
+### MarketCheck API Key
+1. Sign up for an account at [MarketCheck](https://marketcheck.com/)
+2. Generate an API key
+3. Add it to your `.env` file as `VITE_MARKETCHECK_API_KEY`
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
