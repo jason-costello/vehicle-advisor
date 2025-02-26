@@ -1,0 +1,149 @@
+<!-- src/lib/components/VehicleInput.svelte -->
+<script lang="ts" context="module">
+
+    import { createForm } from 'svelte-forms-lib';
+    import { vinValidator } from '$lib/utils/vinValidator';
+
+    export let onSubmit: (data: { vin: string; zipCode: string; mileage: number }) => void;
+    export let isLoading: boolean = false;
+
+    const { form, errors, handleChange, handleSubmit } = createForm({
+        initialValues: {
+            vin: '',
+            zipCode: '',
+            mileage: ''
+        },
+        validate: values => {
+            const errors: Record<string, string> = {};
+
+            if (!values.vin) {
+                errors.vin = 'VIN is required';
+            } else if (!vinValidator(values.vin)) {
+                errors.vin = 'Please enter a valid 17-character VIN';
+            }
+
+            if (!values.zipCode) {
+                errors.zipCode = 'ZIP code is required';
+            } else if (!/^\d{5}$/.test(values.zipCode)) {
+                errors.zipCode = 'Please enter a valid 5-digit ZIP code';
+            }
+
+            if (!values.mileage) {
+                errors.mileage = 'Mileage is required';
+            } else if (isNaN(Number(values.mileage)) || Number(values.mileage) < 0) {
+                errors.mileage = 'Please enter a valid mileage';
+            }
+
+            return errors;
+        },
+        onSubmit: values => {
+            onSubmit({
+                vin: values.vin,
+                zipCode: values.zipCode,
+                mileage: Number(values.mileage)
+            });
+        }
+    });
+</script>
+
+<div class="vehicle-input-container p-4 bg-white rounded-lg shadow-md">
+    <h2 class="text-xl font-bold mb-4">Enter Vehicle Information</h2>
+
+    <form on:submit={handleSubmit} class="space-y-4">
+        <div class="form-group">
+            <label for="vin" class="block text-sm font-medium text-gray-700 mb-1">
+                Vehicle Identification Number (VIN)
+            </label>
+            <input
+                    type="text"
+                    id="vin"
+                    name="vin"
+                    class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="Enter 17-character VIN"
+                    bind:value={$form.vin}
+                    on:change={handleChange}
+                    maxlength="17"
+            />
+            {#if $errors.vin}
+                <p class="mt-1 text-sm text-red-600">{$errors.vin}</p>
+            {/if}
+        </div>
+
+        <div class="form-group">
+            <label for="zipCode" class="block text-sm font-medium text-gray-700 mb-1">
+                ZIP Code
+            </label>
+            <input
+                    type="text"
+                    id="zipCode"
+                    name="zipCode"
+                    class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="Enter 5-digit ZIP code"
+                    bind:value={$form.zipCode}
+                    on:change={handleChange}
+                    maxlength="5"
+                    inputmode="numeric"
+            />
+            {#if $errors.zipCode}
+                <p class="mt-1 text-sm text-red-600">{$errors.zipCode}</p>
+            {/if}
+        </div>
+
+        <div class="form-group">
+            <label for="mileage" class="block text-sm font-medium text-gray-700 mb-1">
+                Vehicle Mileage
+            </label>
+            <input
+                    type="number"
+                    id="mileage"
+                    name="mileage"
+                    class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="Enter current mileage"
+                    bind:value={$form.mileage}
+                    on:change={handleChange}
+                    min="0"
+                    inputmode="numeric"
+            />
+            {#if $errors.mileage}
+                <p class="mt-1 text-sm text-red-600">{$errors.mileage}</p>
+            {/if}
+        </div>
+
+        <button
+                type="submit"
+                class="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md transition duration-150 ease-in-out"
+                disabled={isLoading}
+        >
+            {#if isLoading}
+                <span class="spinner mr-2"></span>
+                Analyzing...
+            {:else}
+                Analyze Vehicle
+            {/if}
+        </button>
+    </form>
+</div>
+
+<style>
+    .spinner {
+        display: inline-block;
+        width: 1rem;
+        height: 1rem;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        border-top-color: white;
+        animation: spin 1s ease-in-out infinite;
+    }
+
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+</style>
+
+
+
+
+
+
+
+
