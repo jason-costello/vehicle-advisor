@@ -1,20 +1,35 @@
 <!-- src/lib/components/PriceComparison.svelte -->
-<script lang="ts" context="module">
+<script lang="ts">
     import { onMount } from 'svelte';
     import type { PriceAnalysis } from '$lib/types/marketdata';
+
     export let priceAnalysis: PriceAnalysis;
 
     let chartElement: HTMLCanvasElement;
 
-    // onMount(() => {
-    //     // In a real implementation, we would use a charting library like Chart.js
-    //     // For this example, we'll use a simple SVG-based chart
-    //     renderPriceComparisonChart();
-    // });
+    onMount(() => {
+        // Now we actually call the chart rendering function
+        renderPriceComparisonChart();
+
+        // Re-render on window resize for responsiveness
+        const handleResize = () => {
+            renderPriceComparisonChart();
+        };
+
+        window.addEventListener('resize', handleResize);
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    });
 
     function renderPriceComparisonChart() {
-        // Simple implementation - in a real app, use a proper charting library
+        if (!chartElement) return;
+
         const width = chartElement.clientWidth;
+        chartElement.width = width; // Set canvas width explicitly
+        chartElement.height = 120; // Match the height in the HTML
+
         const height = 100;
         const padding = 40;
 
@@ -90,7 +105,7 @@
         </div>
 
         <div class="mt-4">
-            <canvas bind:this={chartElement} width="100%" height="120"></canvas>
+            <canvas bind:this={chartElement} height="120"></canvas>
         </div>
 
         <div class="grid grid-cols-2 gap-4 mt-4">

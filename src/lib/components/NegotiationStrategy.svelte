@@ -1,5 +1,6 @@
-<script lang="ts" context="module">
-    import  type { NegotiationStrategy } from '$lib/types/marketdata';
+<!-- src/lib/components/NegotiationStrategy.svelte -->
+<script lang="ts">
+    import type { NegotiationStrategy } from '$lib/types/marketdata';
 
     export let strategy: NegotiationStrategy;
 </script>
@@ -93,4 +94,3 @@
         </ul>
     </div>
 </div>
-

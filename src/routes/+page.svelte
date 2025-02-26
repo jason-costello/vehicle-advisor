@@ -6,7 +6,7 @@
     import SafetyRatings from '$lib/components/SafetyRatings.svelte';
     import PriceComparison from '$lib/components/PriceComparison.svelte';
     import ComparableListing from '$lib/components/ComparableListing.svelte';
-    import NegotiationStrategy from '$lib/components/NegotiationStrategey.svelte';
+    import NegotiationStrategy from '$lib/components/NegotiationStrategy.svelte';
     import LoadingState from '$lib/components/LoadingState.svelte';
 
     import type { VehicleInput as VehicleInputType } from '$lib/types/vehicle';
@@ -190,35 +190,34 @@
                     <div class="border-b border-gray-200 mb-6">
                         <nav class="flex space-x-4">
                             <button
-                                    class="py-2 px-1 border-b-2 font-medium text-sm ${currentTab === 'details' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}"
-                                    on:click={() => currentTab = 'details'}
+                              class={`py-2 px-1 border-b-2 font-medium text-sm ${currentTab === 'details' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}
+                              on:click={() => currentTab = 'details'}
                             >
                                 Vehicle Details
                             </button>
 
                             <button
-                                    class="py-2 px-1 border-b-2 font-medium text-sm ${currentTab === 'safety' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}"
-                                    on:click={() => currentTab = 'safety'}
+                              class={`py-2 px-1 border-b-2 font-medium text-sm ${currentTab === 'safety' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}
+                              on:click={() => currentTab = 'safety'}
                             >
                                 Safety & Recalls
                             </button>
 
                             <button
-                                    class="py-2 px-1 border-b-2 font-medium text-sm ${currentTab === 'price' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}"
-                                    on:click={() => currentTab = 'price'}
+                              class={`py-2 px-1 border-b-2 font-medium text-sm ${currentTab === 'price' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}
+                              on:click={() => currentTab = 'price'}
                             >
                                 Price Analysis
                             </button>
 
                             <button
-                                    class="py-2 px-1 border-b-2 font-medium text-sm ${currentTab === 'negotiation' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}"
-                                    on:click={() => currentTab = 'negotiation'}
+                              class={`py-2 px-1 border-b-2 font-medium text-sm ${currentTab === 'negotiation' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}
+                              on:click={() => currentTab = 'negotiation'}
                             >
                                 Negotiation
                             </button>
                         </nav>
                     </div>
-
                     {#if currentTab === 'details' && decodedVin}
                         <VehicleDetails vehicleDetails={decodedVin} />
                     {:else if currentTab === 'safety' && safetyData}
