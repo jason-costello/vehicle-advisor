@@ -13,7 +13,7 @@
         { vin: '1GNEK13T2YJ204560', description: 'Chevrolet Tahoe' }
     ];
 
-    const { form, errors, handleChange, handleSubmit, setField } = createForm({
+    const { form, errors, handleChange, handleSubmit, updateField } = createForm({
         initialValues: {
             vin: '',
             zipCode: '',
@@ -52,7 +52,8 @@
     });
 
     function useSampleVIN(vin: string) {
-        setField('vin', vin);
+        // Use direct assignment instead of setField
+        $form.vin = vin;
     }
 
     // Detect user's location for ZIP code
@@ -65,7 +66,8 @@
                     );
                     const data = await response.json();
                     if (data.postcode) {
-                        setField('zipCode', data.postcode.slice(0, 5));
+                        // Use direct assignment instead of setField
+                        $form.zipCode = data.postcode.slice(0, 5);
                     }
                 } catch (error) {
                     console.error('Error getting location:', error);

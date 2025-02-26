@@ -1,5 +1,6 @@
 import type { DecodedVIN } from '$lib/types/vehicle';
 import type { ComparableVehicle, PriceAnalysis } from '$lib/types/marketdata';
+import { authorizedFetch } from './marketcheck-auth';
 
 // Use constants instead of importing env variables to avoid dependency issues
 const MARKETCHECK_API_KEY = import.meta.env.VITE_MARKETCHECK_API_KEY || 'YOUR_MARKETCHECK_API_KEY';
@@ -7,8 +8,10 @@ const MARKETCHECK_BASE_URL = import.meta.env.VITE_MARKETCHECK_BASE_URL || 'https
 
 export async function decodeVIN(vin: string): Promise<DecodedVIN> {
     try {
-        const url = `${MARKETCHECK_BASE_URL}/decode/car/${vin}?api_key=${MARKETCHECK_API_KEY}`;
-        const response = await fetch(url);
+        const url = `${MARKETCHECK_BASE_URL}/decode/car/${vin}`;
+
+        // Using the authorized fetch instead of regular fetch
+        const response = await authorizedFetch(url);
 
         if (!response.ok) {
             throw new Error(`Failed to decode VIN: ${response.statusText}`);
@@ -62,9 +65,10 @@ export async function getComparableListings(
         const decodedVin = await decodeVIN(vin);
 
         // Search for similar vehicles in the area
-        const url = `${MARKETCHECK_BASE_URL}/search/car?api_key=${MARKETCHECK_API_KEY}&year=${decodedVin.year}&make=${decodedVin.make}&model=${decodedVin.model}&trim=${decodedVin.trim}&zip=${zipCode}&radius=${radius}&start=0&rows=20`;
+        const url = `${MARKETCHECK_BASE_URL}/search/car?year=${decodedVin.year}&make=${decodedVin.make}&model=${decodedVin.model}&trim=${decodedVin.trim}&zip=${zipCode}&radius=${radius}&start=0&rows=20`;
 
-        const response = await fetch(url);
+        // Using the authorized fetch instead of regular fetch
+        const response = await authorizedFetch(url);
 
         if (!response.ok) {
             throw new Error(`Failed to fetch comparable listings: ${response.statusText}`);
