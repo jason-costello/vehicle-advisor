@@ -9,10 +9,10 @@ For local development, create a `.env` file in the root directory of the project
 ```
 # MarketCheck API (for VIN decoding and market data)
 VITE_MARKETCHECK_API_KEY=your_marketcheck_api_key_here
-VITE_MARKETCHECK_BASE_URL=https://api.marketcheck.com/v2
+VITE_MARKETCHECK_BASE_URL=https://mc-api.marketcheck.com/v2
 VITE_MARKETCHECK_CLIENT_ID=your_marketcheck_client_id_here
 VITE_MARKETCHECK_CLIENT_SECRET=your_marketcheck_client_secret_here
-VITE_MARKETCHECK_TOKEN_URL=https://api.marketcheck.com/oauth/token
+VITE_MARKETCHECK_TOKEN_URL=https://mc-api.marketcheck.com/oauth2/token
 
 # Anthropic Claude API (for AI negotiation strategy)
 VITE_CLAUDE_API_KEY=your_claude_api_key_here
