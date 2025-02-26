@@ -9,8 +9,11 @@ import type { DecodedVIN } from '$lib/types/vehicle';
 import type { SafetyData } from '$lib/types/safety';
 import type { PriceAnalysis, NegotiationStrategy } from '$lib/types/marketdata';
 
-const CLAUDE_API_KEY = import.meta.env.VITE_CLAUDE_API_KEY || '';
-const CLAUDE_API_URL = import.meta.env.VITE_CLAUDE_API_URL || 'https://api.anthropic.com/v1/messages';
+// Import environment variables from our centralized config
+import { ENV } from '$lib/config/environment';
+
+const CLAUDE_API_KEY = ENV.CLAUDE_API_KEY;
+const CLAUDE_API_URL = ENV.CLAUDE_API_URL;
 
 interface ClaudeMessage {
 	role: 'user' | 'assistant';
@@ -122,14 +125,27 @@ IMPORTANT: Respond ONLY with the JSON. No explanations or other text.
 		const claudeResponse = await sendToClaudeAPI(messages);
 
 		// Parse the JSON response
-		// First, we need to extract just the JSON part (in case Claude added any text)
-		const jsonMatch = claudeResponse.match(/\{[\s\S]*\}/);
-		if (!jsonMatch) {
-			throw new Error('Failed to extract JSON from Claude response');
-		}
+		let strategy: NegotiationStrategy;
 
-		// Parse the JSON string
-		const strategy = JSON.parse(jsonMatch[0]) as NegotiationStrategy;
+		try {
+			// First try to parse the entire response as JSON
+			strategy = JSON.parse(claudeResponse) as NegotiationStrategy;
+		} catch (parseError) {
+			// If that fails, try to extract just the JSON part using regex
+			const jsonMatch = claudeResponse.match(/\{[\s\S]*\}/);
+			if (!jsonMatch) {
+				console.error('Failed to extract JSON from Claude response:', claudeResponse);
+				throw new Error('Failed to extract JSON from Claude response');
+			}
+
+			try {
+				// Parse the extracted JSON string
+				strategy = JSON.parse(jsonMatch[0]) as NegotiationStrategy;
+			} catch (nestedError) {
+				console.error('Failed to parse extracted JSON:', jsonMatch[0]);
+				throw nestedError;
+			}
+		}
 
 		return strategy;
 	} catch (error) {

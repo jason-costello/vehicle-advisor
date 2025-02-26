@@ -3,9 +3,9 @@ import type { ComparableVehicle, PriceAnalysis } from '$lib/types/marketdata';
 import { authorizedFetch } from './marketcheck-auth';
 
 // Use constants instead of importing env variables to avoid dependency issues
-const MARKETCHECK_API_KEY = import.meta.env.VITE_MARKETCHECK_API_KEY || 'YOUR_MARKETCHECK_API_KEY';
-const MARKETCHECK_BASE_URL = import.meta.env.VITE_MARKETCHECK_BASE_URL || 'https://api.marketcheck.com/v2';
-
+// Use constants that work in both browser and server environments
+// const MARKETCHECK_API_KEY = (typeof process !== 'undefined' ? process.env.VITE_MARKETCHECK_API_KEY : import.meta.env.VITE_MARKETCHECK_API_KEY) || 'YOUR_MARKETCHECK_API_KEY';
+const MARKETCHECK_BASE_URL = (typeof process !== 'undefined' ? process.env.VITE_MARKETCHECK_BASE_URL : import.meta.env.VITE_MARKETCHECK_BASE_URL) || 'https://api.marketcheck.com/v2';
 export async function decodeVIN(vin: string): Promise<DecodedVIN> {
     try {
         const url = `${MARKETCHECK_BASE_URL}/decode/car/${vin}`;

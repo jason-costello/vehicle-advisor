@@ -11,10 +11,31 @@ interface AuthToken {
 // Create a store to hold the token
 export const authToken = writable<AuthToken | null>(null);
 
+// Import environment variables from our centralized config
+import { ENV } from '$lib/config/environment';
+
 // Environment variables for OAuth2
-const CLIENT_ID = import.meta.env.VITE_MARKETCHECK_CLIENT_ID || '';
-const CLIENT_SECRET = import.meta.env.VITE_MARKETCHECK_CLIENT_SECRET || '';
-const TOKEN_URL = import.meta.env.VITE_MARKETCHECK_TOKEN_URL || 'https://api.marketcheck.com/oauth/token';
+const CLIENT_ID = ENV.MARKETCHECK_CLIENT_ID;
+const CLIENT_SECRET = ENV.MARKETCHECK_CLIENT_SECRET;
+const TOKEN_URL = ENV.MARKETCHECK_TOKEN_URL;
+
+// Helper function to safely access localStorage (browser) or return null (server)
+const safeStorage = {
+	getItem: (key: string): string | null => {
+		if (typeof localStorage !== 'undefined') {
+			return localStorage.getItem(key);
+		}
+		return null;
+	},
+	setItem: (key: string, value: string): void => {
+		if (typeof localStorage !== 'undefined') {
+			localStorage.setItem(key, value);
+		}
+	}
+};
+
+// Helper to check if code is running in browser
+const isBrowser = typeof window !== 'undefined';
 
 /**
  * Request a new OAuth2 token
@@ -50,8 +71,10 @@ export async function getNewToken(): Promise<AuthToken> {
 		// Update the store
 		authToken.set(token);
 
-		// Save to localStorage for persistence
-		localStorage.setItem('marketcheck_token', JSON.stringify(token));
+		// Save to localStorage if in browser environment
+		if (isBrowser) {
+			safeStorage.setItem('marketcheck_token', JSON.stringify(token));
+		}
 
 		return token;
 	} catch (error) {
@@ -72,9 +95,9 @@ export async function getValidToken(): Promise<string> {
 		token = value;
 	})();
 
-	// If no token in store, check localStorage
-	if (!token) {
-		const savedToken = localStorage.getItem('marketcheck_token');
+	// If no token in store, check localStorage if in browser
+	if (!token && isBrowser) {
+		const savedToken = safeStorage.getItem('marketcheck_token');
 		if (savedToken) {
 			try {
 				token = JSON.parse(savedToken);
