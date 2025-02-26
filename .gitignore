@@ -1,4 +1,8 @@
 node_modules
+combined_files.txt
+combined_files.txt.*
+*.iml
+together.go
 
 # Output
 .output
